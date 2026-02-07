@@ -47,11 +47,33 @@ On most platforms, you have to copy-paste long, error-prone wallet addresses (e.
    ```
 
 3. Run the development server:
+### Deployment
    ```bash
    npm run dev
    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 📜 Smart Contracts
+
+This project includes a Sui Move smart contract (`sui_ens_pay`) that logs payments on-chain for indexing.
+
+### Deployment Steps
+1. Navigate to the contract directory:
+   ```bash
+   cd contracts/sui_ens_pay
+   ```
+2. Build and publish (ensure you have the Sui CLI installed):
+   ```bash
+   sui move build
+   sui client publish --gas-budget 100000000
+   ```
+3. Copy the **Package ID** from the output.
+4. Set the `NEXT_PUBLIC_SUI_ENS_PAY_PACKAGE_ID` environment variable in your `.env.local` file (or update `lib/config.ts`).
+   ```bash
+   NEXT_PUBLIC_SUI_ENS_PAY_PACKAGE_ID=0x...
+   ```
+5. The frontend will now automatically route payments through the smart contract.
 
 ## 🧪 How to Test
 

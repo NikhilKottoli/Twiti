@@ -9,10 +9,10 @@ import { config } from '@/lib/config'
 import '@rainbow-me/rainbowkit/styles.css'
 import '@mysten/dapp-kit/dist/index.css'
 
-const { networkConfig } = createNetworkConfig({
-    localnet: { url: 'http://127.0.0.1:9000' },
-    mainnet: { url: 'https://fullnode.mainnet.sui.io:443' },
-})
+const networkConfig = {
+    localnet: { url: 'http://127.0.0.1:9000', network: 'localnet' as any },
+    mainnet: { url: 'https://fullnode.mainnet.sui.io:443', network: 'mainnet' as any },
+}
 
 const queryClient = new QueryClient()
 

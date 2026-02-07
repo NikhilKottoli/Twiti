@@ -8,6 +8,8 @@ import { useSuiAddressFromEns } from '@/hooks/useEnsSuiResolver'
 import { Transaction } from '@mysten/sui/transactions'
 import { Loader2, ArrowRight, Check, X, ShieldCheck } from 'lucide-react'
 
+import { SUI_ENS_PAY_PACKAGE_ID } from '@/lib/config'
+
 export function PaymentForm() {
     const [ensName, setEnsName] = useState('')
     const [amount, setAmount] = useState('')
@@ -29,7 +31,19 @@ export function PaymentForm() {
             const amountMist = BigInt(Math.floor(parseFloat(amount) * 1_000_000_000))
 
             const [coin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountMist)])
-            tx.transferObjects([coin], tx.pure.address(resolvedSuiAddress))
+
+            if (SUI_ENS_PAY_PACKAGE_ID) {
+                tx.moveCall({
+                    target: `${SUI_ENS_PAY_PACKAGE_ID}::ens_payment::pay`,
+                    arguments: [
+                        coin,
+                        tx.pure.address(resolvedSuiAddress),
+                        tx.pure.string(ensName)
+                    ],
+                })
+            } else {
+                tx.transferObjects([coin], tx.pure.address(resolvedSuiAddress))
+            }
 
             signAndExecuteTransaction(
                 { transaction: tx },
