@@ -5,14 +5,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit'
 import { SuiClientProvider, WalletProvider, createNetworkConfig } from '@mysten/dapp-kit'
-import { getFullnodeUrl } from '@mysten/sui/client'
 import { config } from '@/lib/config'
 import '@rainbow-me/rainbowkit/styles.css'
 import '@mysten/dapp-kit/dist/index.css'
 
 const { networkConfig } = createNetworkConfig({
-    localnet: { url: getFullnodeUrl('localnet') },
-    mainnet: { url: getFullnodeUrl('mainnet') },
+    localnet: { url: 'http://127.0.0.1:9000' },
+    mainnet: { url: 'https://fullnode.mainnet.sui.io:443' },
 })
 
 const queryClient = new QueryClient()
