@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SuiENS Pay
 
-## Getting Started
+**SuiENS Pay** is a concept application built for the **Sui Hackathon** that bridges the gap between Ethereum's identity layer and Sui's high-performance DeFi layer. It allows users to send SUI tokens directly to any ENS (Ethereum Name Service) name by resolving the associated Sui address from the ENS records.
 
-First, run the development server:
+![SuiENS Pay](https://github.com/MystenLabs/sui/raw/main/doc/assets/sui-logo.svg) <!-- Ideally upload a screenshot of the app here -->
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Concept
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+On most platforms, you have to copy-paste long, error-prone wallet addresses (e.g., `0x123...abc`). On Ethereum, ENS solves this by allowing users to use human-readable names like `nikhil.eth`. 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**SuiENS Pay** extends this utility to the Sui network. It checks if an ENS name has a Sui address stored in its text records (specifically `com.sui.addr` or `sui`) and allows you to seemingly "send SUI to an ENS name".
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Features
 
-## Learn More
+- **ENS Resolution on Sui**: Automatically fetches and resolves Sui addresses from ENS text records using `wagmi` and `viem`.
+- **Sui Wallet Integration**: Connect your Sui wallet using the `@mysten/dapp-kit` to sign and execute payments.
+- **Dual-Chain Identity**: Connect your Ethereum wallet (via RainbowKit) to verify ownership of the ENS name (optional but recommended for UX).
+- **Premium UI**: A polished, dark-mode interface built with Tailwind CSS and Framer Motion, featuring smooth animations and glassmorphism.
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠 Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Sui Integration**: [@mysten/dapp-kit](https://sdk.mystenlabs.com/dapp-kit) & [@mysten/sui](https://sdk.mystenlabs.com/typescript)
+- **Ethereum/ENS**: [Wagmi](https://wagmi.sh/), [Viem](https://viem.sh/), [RainbowKit](https://www.rainbowkit.com/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🏁 Getting Started
 
-## Deploy on Vercel
+### Prerequisites
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Node.js 18+ installed.
+- A Sui Wallet extension (e.g., Sui Wallet).
+- An Ethereum Wallet extension (e.g., MetaMask).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/twiti-app.git
+   cd twiti-app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🧪 How to Test
+
+1. **Connect Wallet**: Connect your Sui Wallet using the button in the top right.
+2. **Enter Recipient**: Type an ENS name that has a Sui address record.
+   - *Example*: if `nikhil.eth` has a text record `com.sui.addr` = `0x...sui_address`.
+3. **Resolve**: The app will automatically query the ENS registry on Ethereum Mainnet (via public RPC) and display the resolved Sui address.
+4. **Send**: Enter an amount and click "Send Assets".
+5. **Confirm**: Approve the transaction in your Sui Wallet.
+
+## 📄 License
+
+This project is open-source and available under the MIT License.
+
+## 🏆 Hackathon Track
+
+This project was built for the **Sui Hackathon** under the **Integration / DeFI** track, demonstrating how Sui can leverage existing Web3 identity infrastructure.
