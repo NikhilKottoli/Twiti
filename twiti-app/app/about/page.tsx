@@ -39,7 +39,7 @@ export default function About() {
 
                     <MotionCard delay={0.4} title="Our Solution">
                         <p className="text-gray-400 leading-relaxed">
-                            SuiENS Pay allows users to use their existing ENS names (like <span className="text-white font-medium">nikhil.eth</span>) to receive assets on the Sui network. By reading cross-chain text records, we resolve the associated Sui address instantly.
+                            SuiENS Pay allows users to use their existing ENS names (like <span className="text-white font-medium">vatsak.eth</span>) to receive assets on the Sui network. By reading cross-chain text records, we resolve the associated Sui address instantly.
                         </p>
                     </MotionCard>
                 </div>
@@ -56,6 +56,22 @@ export default function About() {
                         <FeatureStep number="1" title="Connect" desc="Connect your Sui wallet to send funds." />
                         <FeatureStep number="2" title="Resolve" desc="Type an ENS name. We fetch the 'com.sui.addr' record from Ethereum." />
                         <FeatureStep number="3" title="Send" desc="Execute the transaction at blazing speed on Sui." />
+                    </div>
+                </motion.div>
+
+                {/* Team Section */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    className="space-y-8 py-10 border-t border-white/10"
+                >
+                    <h2 className="text-2xl font-bold text-center">The Team</h2>
+                    <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                        <TeamMember name="vatsak Kottoli" role="Full Stack Developer" />
+                        <TeamMember name="Alex Chen" role="Smart Contract Engineer" />
+                        <TeamMember name="Sarah Jones" role="UI/UX Designer" />
+                        <TeamMember name="David Kim" role="Product Manager" />
                     </div>
                 </motion.div>
 
@@ -103,6 +119,20 @@ function FeatureStep({ number, title, desc }: { number: string, title: string, d
             </div>
             <h4 className="font-semibold text-lg">{title}</h4>
             <p className="text-sm text-gray-400">{desc}</p>
+        </div>
+    )
+}
+
+function TeamMember({ name, role, nameClass = "", roleClass = "" }: { name: string, role: string, nameClass?: string, roleClass?: string }) {
+    return (
+        <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center font-bold text-lg">
+                {name.charAt(0)}
+            </div>
+            <div>
+                <h4 className={`font-semibold ${nameClass}`}>{name}</h4>
+                <p className={`text-sm text-gray-400 ${roleClass}`}>{role}</p>
+            </div>
         </div>
     )
 }
