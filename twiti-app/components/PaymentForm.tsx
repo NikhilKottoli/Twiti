@@ -97,7 +97,7 @@ export function PaymentForm() {
                                 setEnsName(e.target.value)
                                 setTxSuccess(null)
                             }}
-                            placeholder="nikhil.eth"
+                            placeholder="vatsak.eth"
                             className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white placeholder-gray-600"
                         />
                         <div className="absolute right-3 top-3">

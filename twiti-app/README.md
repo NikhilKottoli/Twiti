@@ -6,7 +6,7 @@
 
 ## 🚀 Concept
 
-On most platforms, you have to copy-paste long, error-prone wallet addresses (e.g., `0x123...abc`). On Ethereum, ENS solves this by allowing users to use human-readable names like `nikhil.eth`. 
+On most platforms, you have to copy-paste long, error-prone wallet addresses (e.g., `0x123...abc`). On Ethereum, ENS solves this by allowing users to use human-readable names like `vatsak.eth`. 
 
 **SuiENS Pay** extends this utility to the Sui network. It checks if an ENS name has a Sui address stored in its text records (specifically `com.sui.addr` or `sui`) and allows you to seemingly "send SUI to an ENS name".
 
@@ -79,7 +79,7 @@ This project includes a Sui Move smart contract (`sui_ens_pay`) that logs paymen
 
 1. **Connect Wallet**: Connect your Sui Wallet using the button in the top right.
 2. **Enter Recipient**: Type an ENS name that has a Sui address record.
-   - *Example*: if `nikhil.eth` has a text record `com.sui.addr` = `0x...sui_address`.
+   - *Example*: if `vatsak.eth` has a text record `com.sui.addr` = `0x...sui_address`.
 3. **Resolve**: The app will automatically query the ENS registry on Ethereum Mainnet (via public RPC) and display the resolved Sui address.
 4. **Send**: Enter an amount and click "Send Assets".
 5. **Confirm**: Approve the transaction in your Sui Wallet.
