@@ -1,38 +1,45 @@
-import { useEnsText } from 'wagmi'
+import { useEnsText, useEnsAddress } from 'wagmi'
 import { mainnet } from 'wagmi/chains'
+import { normalizeEnsName } from '@/lib/utils'
 
+/** ENS-specific hook: resolve Sui address from ENS text records (com.sui.addr or sui). */
 export function useSuiAddressFromEns(name: string) {
-    // Use wagmi to fetch the 'sui' text record
-    // Or 'com.sui.addr' which is a common pattern for custom text records
+    const normalized = normalizeEnsName(name)
+    const hasValidFormat = Boolean(normalized && normalized.includes('.'))
 
-    // Method 1: Fetch 'com.sui.addr'
+    // ENS text record 'com.sui.addr' (primary)
     const { data: suiAddrText, isLoading: isLoadingText, isError: isErrorText } = useEnsText({
-        name,
+        name: normalized,
         key: 'com.sui.addr',
         chainId: mainnet.id,
-        query: {
-            enabled: Boolean(name && name.includes('.')),
-        }
+        query: { enabled: hasValidFormat },
     })
 
-    // Method 2: Fetch 'sui' text record (fallback)
+    // ENS text record 'sui' (fallback)
     const { data: simpleSuiAddr } = useEnsText({
-        name,
+        name: normalized,
         key: 'sui',
         chainId: mainnet.id,
-        query: {
-            enabled: Boolean(name && name.includes('.') && !suiAddrText),
-        }
+        query: { enabled: hasValidFormat && !suiAddrText },
     })
-
-    // Method 3: Fetch 'description' just in case user put it there (for demo robustness)
-    // Actually, let's stick to 'com.sui.addr' and 'sui'.
 
     const address = suiAddrText || simpleSuiAddr
 
     return {
-        address,
+        address: address ?? undefined,
+        normalizedName: normalized,
         isLoading: isLoadingText,
-        isError: isErrorText
+        isError: isErrorText,
     }
+}
+
+/** ENS-specific hook: resolve Ethereum address from ENS name (for display/verification). */
+export function useEnsResolvedAddress(name: string) {
+    const normalized = normalizeEnsName(name)
+    const { data: ethAddress } = useEnsAddress({
+        name: normalized,
+        chainId: mainnet.id,
+        query: { enabled: Boolean(normalized && normalized.includes('.')) },
+    })
+    return { address: ethAddress ?? undefined, normalizedName: normalized }
 }

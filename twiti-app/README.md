@@ -1,93 +1,48 @@
 # SuiENS Pay
 
-**SuiENS Pay** is a concept application built for the **Sui Hackathon** that bridges the gap between Ethereum's identity layer and Sui's high-performance DeFi layer. It allows users to send SUI tokens directly to any ENS (Ethereum Name Service) name by resolving the associated Sui address from the ENS records.
+Send SUI to any ENS name. The app resolves the Sui address from ENS text records (`com.sui.addr` or `sui`) and sends—no copy-paste.
 
-![SuiENS Pay](https://github.com/MystenLabs/sui/raw/main/doc/assets/sui-logo.svg) <!-- Ideally upload a screenshot of the app here -->
+Built for [HackMoney 2026](https://ethglobal.com/events/hackmoney2026) (ENS pool + Sui track).
 
-## 🚀 Concept
+## Run the app
 
-On most platforms, you have to copy-paste long, error-prone wallet addresses (e.g., `0x123...abc`). On Ethereum, ENS solves this by allowing users to use human-readable names like `vatsak.eth`. 
+```bash
+npm install
+cp .env.example .env.local   # optional until you deploy the contract
+npm run dev
+```
 
-**SuiENS Pay** extends this utility to the Sui network. It checks if an ENS name has a Sui address stored in its text records (specifically `com.sui.addr` or `sui`) and allows you to seemingly "send SUI to an ENS name".
+Open [http://localhost:3000](http://localhost:3000). Use **Home** for the landing page and **Send SUI** for the payment form.
 
-## ✨ Features
+## Deploy the Move contract
 
-- **ENS Resolution on Sui**: Automatically fetches and resolves Sui addresses from ENS text records using `wagmi` and `viem`.
-- **Sui Wallet Integration**: Connect your Sui wallet using the `@mysten/dapp-kit` to sign and execute payments.
-- **Dual-Chain Identity**: Connect your Ethereum wallet (via RainbowKit) to verify ownership of the ENS name (optional but recommended for UX).
-- **Premium UI**: A polished, dark-mode interface built with Tailwind CSS and Framer Motion, featuring smooth animations and glassmorphism.
+**Exact steps** (prerequisites, build, publish, env): see **[contracts/sui_ens_pay/DEPLOY.md](contracts/sui_ens_pay/DEPLOY.md)**.
 
-## 🛠 Tech Stack
+Short version:
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Sui Integration**: [@mysten/dapp-kit](https://sdk.mystenlabs.com/dapp-kit) & [@mysten/sui](https://sdk.mystenlabs.com/typescript)
-- **Ethereum/ENS**: [Wagmi](https://wagmi.sh/), [Viem](https://viem.sh/), [RainbowKit](https://www.rainbowkit.com/)
-
-## 🏁 Getting Started
-
-### Prerequisites
-
-- Node.js 18+ installed.
-- A Sui Wallet extension (e.g., Sui Wallet).
-- An Ethereum Wallet extension (e.g., MetaMask).
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/twiti-app.git
-   cd twiti-app
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Run the development server:
-### Deployment
-   ```bash
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## 📜 Smart Contracts
-
-This project includes a Sui Move smart contract (`sui_ens_pay`) that logs payments on-chain for indexing.
-
-### Deployment Steps
-1. Navigate to the contract directory:
-   ```bash
-   cd contracts/sui_ens_pay
-   ```
-2. Build and publish (ensure you have the Sui CLI installed):
-   ```bash
-   sui move build
-   sui client publish --gas-budget 100000000
-   ```
+1. Install [Sui CLI](https://docs.sui.io/build/install), fund a wallet, set active env (`sui client active-env`).
+2. From `contracts/sui_ens_pay`: `sui move build` then `sui client publish --gas-budget 100000000`.
 3. Copy the **Package ID** from the output.
-4. Set the `NEXT_PUBLIC_SUI_ENS_PAY_PACKAGE_ID` environment variable in your `.env.local` file (or update `lib/config.ts`).
-   ```bash
-   NEXT_PUBLIC_SUI_ENS_PAY_PACKAGE_ID=0x...
-   ```
-5. The frontend will now automatically route payments through the smart contract.
+4. In the app root: set `NEXT_PUBLIC_SUI_ENS_PAY_PACKAGE_ID=<Package ID>` in `.env.local`.
+5. Restart the dev server. Payments will go through the contract and emit a `Payment` event.
 
-## 🧪 How to Test
+Without the env var, the app still works using direct SUI transfer.
 
-1. **Connect Wallet**: Connect your Sui Wallet using the button in the top right.
-2. **Enter Recipient**: Type an ENS name that has a Sui address record.
-   - *Example*: if `vatsak.eth` has a text record `com.sui.addr` = `0x...sui_address`.
-3. **Resolve**: The app will automatically query the ENS registry on Ethereum Mainnet (via public RPC) and display the resolved Sui address.
-4. **Send**: Enter an amount and click "Send Assets".
-5. **Confirm**: Approve the transaction in your Sui Wallet.
+## How to test
 
-## 📄 License
+Use an ENS name that has a Sui address in its text records. Add one at [app.ens.domains](https://app.ens.domains) if you own the name.
 
-This project is open-source and available under the MIT License.
+1. Open **Send SUI**, connect your Sui wallet (and optionally Ethereum).
+2. Enter an ENS name (e.g. `yourname.eth`). The app shows the resolved Sui address when found.
+3. Enter amount and click **Send Assets**. Approve in your Sui wallet.
+4. If the contract is deployed, check the transaction on [Suiscan](https://suiscan.xyz/mainnet) for the `Payment` event.
 
-## 🏆 Hackathon Track
+## Tech
 
-This project was built for the **Sui Hackathon** under the **Integration / DeFI** track, demonstrating how Sui can leverage existing Web3 identity infrastructure.
+- Next.js 15, Tailwind, Framer Motion
+- ENS: Wagmi `useEnsText` for `com.sui.addr` / `sui`
+- Sui: @mysten/dapp-kit, Move contract in `contracts/sui_ens_pay`
+
+## License
+
+MIT

@@ -6,7 +6,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { ConnectButton as SuiConnectButton, useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
 import { useSuiAddressFromEns } from '@/hooks/useEnsSuiResolver'
 import { Transaction } from '@mysten/sui/transactions'
-import { Loader2, ArrowRight, Check, X, ShieldCheck } from 'lucide-react'
+import { Loader2, ArrowRight, Check, X, ShieldCheck, Info } from 'lucide-react'
 
 import { SUI_ENS_PAY_PACKAGE_ID } from '@/lib/config'
 
@@ -19,8 +19,8 @@ export function PaymentForm() {
     const currentAccount = useCurrentAccount()
     const { mutate: signAndExecuteTransaction, isPending: isTxPending } = useSignAndExecuteTransaction()
 
-    // ENS Resolver (Custom Hook)
-    const { address: resolvedSuiAddress, isLoading: isEnsLoading } = useSuiAddressFromEns(ensName)
+    // ENS Resolver (custom ENS hooks — not just RainbowKit)
+    const { address: resolvedSuiAddress, normalizedName, isLoading: isEnsLoading } = useSuiAddressFromEns(ensName)
 
     const handleSend = async () => {
         if (!currentAccount || !resolvedSuiAddress || !amount) return
@@ -63,28 +63,38 @@ export function PaymentForm() {
     }
 
     return (
-        <div className="w-full max-w-md mx-auto p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 pointer-events-none" />
-
+        <div className="w-full max-w-md mx-auto p-6 md:p-8 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-violet-500/5 pointer-events-none" />
             <div className="relative z-10 space-y-6">
-                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                    Send SUI via ENS
+                <h2 className="text-2xl font-bold tracking-tight">
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-indigo-200">Send SUI via ENS</span>
                 </h2>
 
-                {/* Wallet Connections */}
-                <div className="flex flex-col gap-3">
-                    <div className="flex justify-between items-center text-sm text-gray-400">
-                        <span>Identities</span>
-                    </div>
-                    <div className="flex gap-2 justify-between">
-                        <div className="opacity-90 hover:opacity-100 transition-opacity">
-                            <ConnectButton showBalance={false} chainStatus="icon" accountStatus="avatar" />
+                {/* Wallets: Ethereum (optional, for ENS resolution) + Sui (required to send) */}
+                <div className="space-y-4">
+                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Wallets</p>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] text-gray-500 block">Ethereum (optional)</label>
+                            <div className="min-h-[40px] flex items-center">
+                                <ConnectButton showBalance={false} chainStatus="icon" accountStatus="avatar" />
+                            </div>
                         </div>
-                        <div className="opacity-90 hover:opacity-100 transition-opacity">
-                            <SuiConnectButton />
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] text-gray-500 block">Sui (required to send)</label>
+                            <div className="min-h-[40px] flex items-center">
+                                <SuiConnectButton />
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                {!SUI_ENS_PAY_PACKAGE_ID && (
+                    <div className="flex items-center gap-2 text-xs text-amber-400/90 bg-amber-900/20 px-3 py-2 rounded-lg border border-amber-500/20">
+                        <Info className="w-4 h-4 shrink-0" />
+                        <span>Using direct transfer. Set <code className="text-amber-300/90">NEXT_PUBLIC_SUI_ENS_PAY_PACKAGE_ID</code> for full Sui contract integration (on-chain Payment events).</span>
+                    </div>
+                )}
 
                 {/* Input: ENS Name */}
                 <div className="space-y-2">
@@ -98,7 +108,7 @@ export function PaymentForm() {
                                 setTxSuccess(null)
                             }}
                             placeholder="vatsak.eth"
-                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white placeholder-gray-600"
+                            className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition-all text-white placeholder-gray-500"
                         />
                         <div className="absolute right-3 top-3">
                             {isEnsLoading ? (
@@ -143,7 +153,7 @@ export function PaymentForm() {
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         placeholder="0.0"
-                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-white placeholder-gray-600"
+                        className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all text-white placeholder-gray-500"
                     />
                 </div>
 
@@ -151,10 +161,10 @@ export function PaymentForm() {
                 <button
                     onClick={handleSend}
                     disabled={!currentAccount || !resolvedSuiAddress || !amount || isTxPending}
-                    className={`w-full py-4 rounded-xl font-bold text-white transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
+                    className={`w-full py-4 rounded-xl font-semibold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed
             ${txSuccess
-                            ? 'bg-gradient-to-r from-green-500 to-emerald-600'
-                            : 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:shadow-lg hover:shadow-purple-500/20'
+                            ? 'bg-emerald-600'
+                            : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 shadow-lg shadow-indigo-500/25'
                         }`}
                 >
                     {isTxPending ? (
