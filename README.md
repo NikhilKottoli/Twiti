@@ -2,8 +2,6 @@
 
 **SuiENS Pay** is a concept application built for the **Sui Hackathon** that bridges the gap between Ethereum's identity layer and Sui's high-performance DeFi layer. It allows users to send SUI tokens directly to any ENS (Ethereum Name Service) name by resolving the associated Sui address from the ENS records.
 
-![SuiENS Pay](https://github.com/MystenLabs/sui/raw/main/doc/assets/sui-logo.svg) <!-- Ideally upload a screenshot of the app here -->
-
 ## 🚀 Concept
 
 On most platforms, you have to copy-paste long, error-prone wallet addresses (e.g., `0x123...abc`). On Ethereum, ENS solves this by allowing users to use human-readable names like `vatsak.eth`. 
